@@ -1,0 +1,41 @@
+{
+  "image": "thomasloven/hass-custom-devcontainer",
+  "onCreateCommand": "sudo chown -R vscode:nvm /usr/local/share/nvm",
+  "postCreateCommand": "sudo -E container setup && npm config set store-dir $XDG_DATA_HOME && npm install",
+  "forwardPorts": [8123, 5173],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/config/www/workspace,type=bind",
+    "source=${localWorkspaceFolder}/.devcontainer/config,target=/config/config,type=bind",
+    "source=${localWorkspaceFolder}/.devcontainer/config/custom_components,target=/config/custom_components,type=bind",
+    "source=${localWorkspaceFolder}/.devcontainer/config/configuration.yaml,target=/config/configuration.yaml,type=bind"
+  ],
+  "containerEnv": {
+    "HASS_USERNAME": "dev",
+    "HASS_PASSWORD": "dev",
+    "LOVELACE_LOCAL_FILES": "./dist/mediatracker-card.js",
+    "XDG_DATA_HOME": "/home/vscode/.local/share"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "runem.lit-plugin",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 2,
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": false,
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  }
+}

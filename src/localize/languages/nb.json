@@ -1,0 +1,20 @@
+{
+  "common": {
+    "version": "Versjon",
+    "invalid_configuration": "Ugyldig oppsett",
+    "show_warning": "Vis advarsel"
+  },
+  "editor": {
+    "name": "Navn",
+    "title": "Tittel",
+    "refresh_interval": "Oppdateringsintervall",
+    "number_of_days": "Antall dager",
+    "show_backdrop": "Vis backgrunnsgrafikk",
+    "show_description": "Vis beskrivelse",
+    "constrict_height": "Tving korthøyde",
+    "show_human_readable": "Vis tid som setning"
+  },
+  "card": {
+    "today": "i dag"
+  }
+}

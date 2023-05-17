@@ -1,0 +1,20 @@
+{
+  "common": {
+    "version": "Version",
+    "invalid_configuration": "Invalid configuration",
+    "show_warning": "Show warning"
+  },
+  "editor": {
+    "name": "Name",
+    "title": "Title",
+    "refresh_interval": "Refresh Interval",
+    "number_of_days": "Number of Days",
+    "show_backdrop": "Show Backdrop",
+    "show_description": "Show Description",
+    "constrict_height": "Constrict Card Height",
+    "show_human_readable": "Show Human Readable"
+  },
+  "card": {
+    "today": "Today"
+  }
+}
