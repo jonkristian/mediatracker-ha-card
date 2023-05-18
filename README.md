@@ -51,11 +51,14 @@ Media Tracker Card can be installed through [HACS][hacs] (Home Assistant Communi
 | name                     | `string`            | Name of the card                                                    |
 | entities                 | `list(required)`    | A list of entity IDs or entity objects, see below.                  |
 | number_of_days           | `integer(required)` | How many days ahead you want to fetch.                              |
+| constrict_height         | `boolean`           | Sets a predetermined card height and adds an inline scroll.         |
 | refresh_interval         | `integer(required)` | How often the calendar should refresh.                              |
 | show_description         | `boolean`           | Show calendar entry description if returned from `mediatracker-ha`. |
-| constrict_height         | `boolean`           | Sets a predetermined card height and adds an inline scroll.         |
-| human_readable           | `string`            | Show human readable upcoming days instead of day name.              |
-| show_backdrop            | `boolean`           | Show calendar entries with  backdrop graphics.                      |
+| human_readable_countdown | `boolean`           | Show human readable countdown next to day name.                     |
+| rating                   | `boolean`           | Show rating if there are any.                                       |
+| style                    | `string`            | Style of your choice: `plain`, `poster` and `backdrop`              |
+| source_links             | `string`            | Whether to include source links: `primary`, `all`                   |
+| descriptions             | `string `           | Include description for: `today`, `week` or `all`                   |
 
 ## Entity options
 

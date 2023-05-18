@@ -10,12 +10,14 @@ export interface MediaTrackerCardConfig extends LovelaceCardConfig {
   events: object;
   state: object;
   name?: string;
+  style: string;
   refresh_interval: number;
   number_of_days: number;
-  show_backdrop: boolean;
-  show_description: boolean;
+  description: string;
+  source_links: string;
+  show_rating: boolean;
   constrict_height: boolean;
-  show_human_readable: boolean;
+  human_readable_countdown: boolean;
   show_warning?: boolean;
   show_error?: boolean;
 }

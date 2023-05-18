@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export const cardStyle = css`
-
+  // Card
   .mt-card {
     display: flex;
     flex-direction: column;
@@ -15,41 +15,81 @@ export const cardStyle = css`
     margin-bottom: 1rem;
   }
 
-  // Events
-  .mt-events {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+  .mt-calendar.constrict {
+    overflow-y: scroll;
+    max-height: 450px;
+    padding-right: 1rem;
   }
 
+  .mt-day {
+    margin-bottom: 1.6rem;
+  }
+
+  // Events
   .mt-events-header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border-bottom: 1px solid var(--divider-color);
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
   }
 
   .mt-events-header__day,
   .mt-events-header__date {
+    font-size: 18px;
     font-weight: 400;
     padding: 0;
     margin: 0;
   }
 
-  // Event
-  .mt-event {
-    display: flex;
-    flex-direction: row;
+  .mt-events {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 1fr;
     gap: 1rem;
-    margin-bottom: .5rem;
   }
 
-  .mt-event-header {
+  // Event
+  .mt-event {
     position: relative;
-    margin-left: 5px;
+    border-radius: 10px;
+    height: 100%;
+    overflow: hidden;
+    /* white-space: nowrap; */
+  }
+
+  .mt-event-backdrop {
+    position: absolute;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-position: center;
+  }
+
+  .mt-event-content {
+    position: relative;
+    z-index: 2;
     color: var(--primary-text-color);
-    font-size: 16px;
-    font-weight: 300;
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .has-backdrop .mt-event-content {
+    background-color: rgba(0,0,0,.75);
+    padding: 1rem;
+    height: 100%;
+  }
+
+  .mt-event-title {
+    font-size: 14px;
+    font-weight: 400;
+    position: relative;
+    color: var(--primary-text-color);
+    margin: 0;
+    margin-left: 5px;
 
     &:before {
       content: "";
@@ -62,11 +102,19 @@ export const cardStyle = css`
     }
   }
 
-  .mt-event-header__description {}
+  .has-backdrop .mt-event-title {
+    font-weight: 500;
+  }
 
-  .mt-event-cover {
-    width: 100px;
-    height: 100%:
-    object-fit: cover;
+  .mt-event-description {
+    color: var(--secondary-text-color);
+    font-size: 13px;
+    margin-bottom: 1rem;
+  }
+
+  .has-backdrop .mt-event-description {
+    color: var(--primary-text-color);
+    margin-bottom: 0;
+    max-width: 600px;
   }
 `;

@@ -9,12 +9,30 @@
     "title": "Title",
     "refresh_interval": "Refresh Interval",
     "number_of_days": "Number of Days",
-    "show_backdrop": "Show Backdrop",
-    "show_description": "Show Description",
     "constrict_height": "Constrict Card Height",
-    "show_human_readable": "Show Human Readable"
+    "human_readable_countdown": "Human Readable Countdown",
+    "show_rating": "Show Rating",
+    "style": {
+      "title": "Select style ...",
+      "backdrop": "Backdrop",
+      "poster": "Poster",
+      "plain": "Plain"
+    },
+    "source_links": {
+      "title": "Source Links",
+      "primary": "Primary",
+      "all": "Show all"
+    },
+    "description": {
+      "title": "Include Description",
+      "today": "Today",
+      "week": "1 Week",
+      "all": "Show for All"
+    }
   },
   "card": {
-    "today": "Today"
+    "today": "Today",
+    "rating": "Rating",
+    "studio_link": "Visit Studio"
   }
 }

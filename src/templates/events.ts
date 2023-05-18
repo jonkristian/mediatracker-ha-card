@@ -1,6 +1,8 @@
 import { css, LitElement, html, TemplateResult, CSSResultGroup } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import "./event";
+import "./event-backdrop";
+import "./event-poster";
 import setupCustomlocalize from "../localize/localize";
 import dayjs from "dayjs";
 import "dayjs/locale/nb";
@@ -29,38 +31,58 @@ export class MediaTrackerCardEvents extends LitElement {
       <header class="mt-events-header">
         ${dayjs(this.date).isToday()
         ? html`
-        <h3 class="mt-events-header__day">${customLocalize("card.today")}</h3>
+          <h3 class="mt-events-header__day">${customLocalize("card.today")}</h3>
         `
         : html`
-          ${this.config.show_human_readable
-          ? html`
-            <h3 class="mt-events-header__day">${dayjs(this.date).fromNow()}</h3>
-          `
-          : html`
-            <h3 class="mt-events-header__day">${dayjs(this.date).format('dddd')}</h3>
-          `
-          }
-          <h3 class="mt-events-header__date">${dayjs(this.date).format('DD/MM')}</h3>
+          <h3 class="mt-events-header__day">
+            ${dayjs(this.date).format('dddd')}
+            ${this.config.human_readable_countdown ? html`<small class="mt-events-header__hrc"> • ${dayjs(this.date).fromNow()}</small>`:''}
+          </h3>
         `}
+        <p class="mt-events-header__date">${dayjs(this.date).format('DD/MM')}</p>
       </header>
 
-      ${this.events
-        ? html`
-          <div class="mt-events">
-            ${this.events.map(
-              (event) => html`
-                <mediatracker-card-event
-                  .hass=${this.hass}
-                  .event="${event}"
-                  .show_backdrop="${this.config.show_backdrop}"
-                  .show_description="${this.config.show_description}"
-                ></mediatracker-card-event>
-              `
-            )}
+      ${this.config.style == 'backdrop' ? html`
+          <div class="mt-events style-backdrop">
+            ${this.events.map((event) => html`
+              <mediatracker-event-backdrop
+                .hass=${this.hass}
+                .event="${event}"
+                .rating="${this.config.show_rating}"
+                .description="${this.config.description}"
+                .source_links="${this.config.source_links}"
+              ></mediatracker-event-backdrop>
+            `)}
           </div>
-          `
-        : html``}
-    `;
+        `
+      : this.config.style == 'poster' ? html`
+          <div class="mt-events style-poster">
+            ${this.events.map((event) => html`
+              <mediatracker-event-poster
+                .hass=${this.hass}
+                .event="${event}"
+                .rating="${this.config.show_rating}"
+                .description="${this.config.description}"
+                .source_links="${this.config.source_links}"
+              ></mediatracker-event-poster>
+            `)}
+          </div>
+      `
+      : html`
+        <div class="mt-events">
+          ${this.events.map((event) => html`
+            <mediatracker-event
+              .hass=${this.hass}
+              .event="${event}"
+              .rating="${this.config.show_rating}"
+              .description="${this.config.description}"
+              .source_links="${this.config.source_links}"
+            ></mediatracker-event>
+          `)}
+        </div>
+      `}
+
+    `
   }
 
   static get styles(): CSSResultGroup {
@@ -83,9 +105,15 @@ export class MediaTrackerCardEvents extends LitElement {
       }
 
       .mt-events {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
+        display: grid;
+        gap: 1.6rem;
+      }
+
+      .mt-events.style-backdrop,
+      .mt-events.style-poster {
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-auto-rows: 1fr;
       }
     `;
   }

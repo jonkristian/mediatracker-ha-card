@@ -9,12 +9,30 @@
     "title": "Tittel",
     "refresh_interval": "Oppdateringsintervall",
     "number_of_days": "Antall dager",
-    "show_backdrop": "Vis backgrunnsgrafikk",
-    "show_description": "Vis beskrivelse",
     "constrict_height": "Tving korthøyde",
-    "show_human_readable": "Vis tid som setning"
+    "human_readable_countdown": "Nedtelling som setning",
+    "show_rating": "Vis vurdering",
+    "style": {
+      "title": "Velg stil ...",
+      "backdrop": "Bakgrunnsgrafikk",
+      "poster": "Poster",
+      "plain": "Vanlig"
+    },
+    "source_links": {
+      "title": "Kildelenker",
+      "primary": "Primær",
+      "all": "Vis alle"
+    },
+    "description": {
+      "title": "Inkluder beskrivelse",
+      "today": "I dag",
+      "week": "1 uke",
+      "all": "Vis for alle"
+    }
   },
   "card": {
-    "today": "i dag"
+    "today": "I dag",
+    "rating": "Vurdering",
+    "studio_link": "Besøk studio"
   }
 }

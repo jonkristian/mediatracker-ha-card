@@ -1,5 +1,5 @@
 import { LitElement, html, TemplateResult, CSSResultGroup } from "lit";
-import { customElement, property, query, state } from "lit/decorators.js";
+import { customElement, eventOptions, property, query, state } from "lit/decorators.js";
 import { guard } from "lit/directives/guard.js";
 import type { SortableEvent } from "sortablejs";
 import { ScopedRegistryHost } from "@lit-labs/scoped-registry-mixin";
@@ -76,6 +76,10 @@ export class MediaTrackerCardEditor
 
     const customLocalize = setupCustomlocalize(this.hass);
 
+    const eventStyleChoices = ["backdrop", "poster", "plain"];
+    const sourceLinkChoices = ["primary", "all"];
+    const descriptionChoices = ["today", "week", "all"];
+
     if (this._subElementEditorConfig) {
       return html`
         <mediatracker-card-entity-editor
@@ -89,75 +93,129 @@ export class MediaTrackerCardEditor
       `;
     }
 
-    // Filter states to only include sensors, and only those with an attribute containing a "route_id".
-    const sensorsWithRouteId = Object.values(this.hass!.states)
+    // Filter states to only include calendar entitie.
+    const calendarEntities = Object.values(this.hass!.states)
       .filter((entity) => entity.entity_id.startsWith("calendar."))
       .map((sensor) => sensor.entity_id);
 
     return html`
       <div class="card-config">
-        <ha-textfield
-          class="card-title"
-          .label=${customLocalize("editor.name")}
-          .value="${this._config.name}"
-          .configValue="${"name"}"
-          @change="${this._valueChanged}"
-        ></ha-textfield>
-
-        <ha-formfield .label=${customLocalize("editor.show_backdrop")}>
-          <ha-checkbox
+        <div style="margin-top: 1rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+          <ha-textfield
+            class="card-title"
+            .label=${customLocalize("editor.name")}
+            .value="${this._config.name}"
+            .configValue="${"name"}"
             @change="${this._valueChanged}"
-            .checked=${this._config.show_backdrop}
-            .configValue="${"show_backdrop"}"
-          ></ha-checkbox>
-        </ha-formfield>
+          ></ha-textfield>
 
-        <ha-formfield .label=${customLocalize("editor.show_description")}>
-          <ha-checkbox
+          <mwc-select
+            .label=${customLocalize("editor.style.title")}
+            .configValue=${"style"}
+            .value=${this._config.style}
+            @selected="${this._valueChanged}"
+            @closed="${(e) => e.stopPropagation()}"
+            fixedMenuPosition
+          >
+            <mwc-list-item></mwc-list-item>
+            ${eventStyleChoices.map(
+              (value) => html`
+                <mwc-list-item .value=${value}
+                  >${customLocalize(
+                    `editor.style.${value}`
+                  )}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
+
+          <ha-textfield
+            class="refresh-interval"
+            .label=${customLocalize("editor.refresh_interval")}
+            .value="${this._config.refresh_interval}"
+            .configValue="${"refresh_interval"}"
             @change="${this._valueChanged}"
-            .checked=${this._config.show_description}
-            .configValue="${"show_description"}"
-          ></ha-checkbox>
-        </ha-formfield>
+          ></ha-textfield>
 
-        <ha-formfield .label=${customLocalize("editor.constrict_height")}>
-          <ha-checkbox
+          <ha-textfield
+            class="refresh-interval"
+            .label=${customLocalize("editor.number_of_days")}
+            .value="${this._config.number_of_days}"
+            .configValue="${"number_of_days"}"
             @change="${this._valueChanged}"
-            .checked=${this._config.constrict_height}
-            .configValue="${"constrict_height"}"
-          ></ha-checkbox>
-        </ha-formfield>
+          ></ha-textfield>
 
-        <ha-formfield .label=${customLocalize("editor.show_human_readable")}>
-          <ha-checkbox
-            @change="${this._valueChanged}"
-            .checked=${this._config.show_human_readable}
-            .configValue="${"show_human_readable"}"
-          ></ha-checkbox>
-        </ha-formfield>
+          <mwc-select
+            .label=${customLocalize("editor.description.title")}
+            .configValue=${"description"}
+            .value=${this._config.description}
+            @selected="${this._valueChanged}"
+            @closed="${(e) => e.stopPropagation()}"
+            fixedMenuPosition
+          >
+            <mwc-list-item></mwc-list-item>
+            ${descriptionChoices.map(
+              (value) => html`
+                <mwc-list-item .value=${value}
+                  >${customLocalize(
+                    `editor.description.${value}`
+                  )}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <ha-textfield
-          class="refresh-interval"
-          .label=${customLocalize("editor.refresh_interval")}
-          .value="${this._config.refresh_interval}"
-          .configValue="${"refresh_interval"}"
-          @change="${this._valueChanged}"
-        ></ha-textfield>
+          <mwc-select
+            .label=${customLocalize("editor.source_links.title")}
+            .configValue=${"source_links"}
+            .value=${this._config.source_links}
+            @selected="${this._valueChanged}"
+            @closed="${(e) => e.stopPropagation()}"
+            fixedMenuPosition
+          >
+            <mwc-list-item></mwc-list-item>
+            ${sourceLinkChoices.map(
+              (value) => html`
+                <mwc-list-item .value=${value}
+                  >${customLocalize(
+                    `editor.source_links.${value}`
+                  )}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <ha-textfield
-          class="refresh-interval"
-          .label=${customLocalize("editor.number_of_days")}
-          .value="${this._config.number_of_days}"
-          .configValue="${"number_of_days"}"
-          @change="${this._valueChanged}"
-        ></ha-textfield>
+          <ha-formfield .label=${customLocalize("editor.show_rating")}>
+            <ha-checkbox
+              @change="${this._valueChanged}"
+              .checked=${this._config.show_rating}
+              .configValue="${"show_rating"}"
+            ></ha-checkbox>
+          </ha-formfield>
+
+          <ha-formfield .label=${customLocalize("editor.human_readable_countdown")}>
+            <ha-checkbox
+              @change="${this._valueChanged}"
+              .checked=${this._config.human_readable_countdown}
+              .configValue="${"human_readable_countdown"}"
+            ></ha-checkbox>
+          </ha-formfield>
+
+          <ha-formfield .label=${customLocalize("editor.constrict_height")}>
+            <ha-checkbox
+              @change="${this._valueChanged}"
+              .checked=${this._config.constrict_height}
+              .configValue="${"constrict_height"}"
+            ></ha-checkbox>
+          </ha-formfield>
+        </div>
 
         <div class="entities">
           ${guard([this._entities, this._renderEmptySortable], () =>
             this._renderEmptySortable
               ? ""
               : this._entities?.map(
-                  (route, index) => html`
+                  (calendar, index) => html`
                     <div class="entity">
                       <div class="handle">
                         <ha-icon icon="mdi:drag"></ha-icon>
@@ -166,9 +224,9 @@ export class MediaTrackerCardEditor
                         <div class="special-row">
                           <div>
                             <span
-                              >${route.name ? route.name : route.entity}</span
+                              >${calendar.name ? calendar.name : calendar.entity}</span
                             >
-                            <span class="secondary">${route.entity}</span>
+                            <span class="secondary">${calendar.entity}</span>
                           </div>
                         </div>
                       `}
@@ -202,7 +260,7 @@ export class MediaTrackerCardEditor
           fixedMenuPosition
           naturalMenuWidth
         >
-          ${sensorsWithRouteId.map(
+          ${calendarEntities.map(
             (entity) => html`
               <mwc-list-item .value=${entity}> ${entity} </mwc-list-item>
             `

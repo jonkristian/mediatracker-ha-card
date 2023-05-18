@@ -180,3 +180,12 @@ export function getGraphColorByIndex(
     getColorByIndex(index)
   );
 }
+
+export function getMediaUrl(mediaItem) {
+  const audibleDomain = 'com';
+  mediaItem.imdb = `https://www.imdb.com/title/${mediaItem.imdbId}`
+  mediaItem.tmdb = `https://www.themoviedb.org/${mediaItem.mediaType}/${mediaItem.tmdbId}`
+  mediaItem.igdb = `https://www.igdb.com/games/${mediaItem.title.toLowerCase().replaceAll(' ', '-')}`
+  mediaItem.openlibrary = `https://openlibrary.org${mediaItem.openlibraryId}`
+  mediaItem.audible = `https://audible.${audibleDomain}/pd/${mediaItem.audibleId}?overrideBaseCountry=true&ipRedirectOverride=true`
+}
