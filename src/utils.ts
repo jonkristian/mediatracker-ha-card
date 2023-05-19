@@ -1,6 +1,6 @@
+import { html } from "lit";
 import { HomeAssistant } from "custom-card-helpers";
-
-import type { MediaTrackerCalendar, MediaTrackerCalendarEvent } from "./types";
+import type { MediaTrackerCalendar, MediaTrackerCalendarEvent, MediaTrackerCalendarEventSources } from "./types";
 
 import dayjs from "dayjs";
 import "dayjs/locale/nb";
@@ -79,6 +79,7 @@ const getCalendarDate = (dateObj: any): string | undefined => {
   return undefined;
 };
 
+
 export const getCalendars = (hass): MediaTrackerCalendar[] =>
   Object.keys(hass.states)
     .sort()
@@ -89,22 +90,29 @@ export const getCalendars = (hass): MediaTrackerCalendar[] =>
 
 
 export function groupEventsByDay(events) {
-  // grouping events by days, returns object with days and events
-  const ev: any[] = [].concat(...events);
-  const groupsOfEvents = ev.reduce(function (r, a: { start: number }) {
-    r[a.start] = r[a.start] || [];
-    r[a.start].push(a);
-    return r;
+  const groups = events.reduce((groups, event) => {
+    const date = event.start;
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(event);
+    return groups;
   }, {});
 
-  let groupedEvents = Object.keys(groupsOfEvents).map(function (k) {
-    return groupsOfEvents[k];
+  const sortedStarts = Object.keys(groups).sort((a, b) => {
+    const dateA = new Date(a).getTime();
+    const dateB = new Date(b).getTime();
+    return dateA - dateB;
   });
 
-  groupedEvents = groupedEvents;
+  const groupArrays = sortedStarts.map(date => ({
+    date,
+    events: groups[date]
+  }));
 
-  return groupedEvents;
+  return groupArrays;
 }
+
 
 export const COLORS = [
   "#44739e",
@@ -181,11 +189,20 @@ export function getGraphColorByIndex(
   );
 }
 
-export function getMediaUrl(mediaItem) {
-  const audibleDomain = 'com';
-  mediaItem.imdb = `https://www.imdb.com/title/${mediaItem.imdbId}`
-  mediaItem.tmdb = `https://www.themoviedb.org/${mediaItem.mediaType}/${mediaItem.tmdbId}`
-  mediaItem.igdb = `https://www.igdb.com/games/${mediaItem.title.toLowerCase().replaceAll(' ', '-')}`
-  mediaItem.openlibrary = `https://openlibrary.org${mediaItem.openlibraryId}`
-  mediaItem.audible = `https://audible.${audibleDomain}/pd/${mediaItem.audibleId}?overrideBaseCountry=true&ipRedirectOverride=true`
+
+export function getSourceLinks(type: string, sources: MediaTrackerCalendarEventSources) {
+  if(type == 'all') {
+    return html`
+      ${sources.igdb ? html`<a class="mt-event-source" href="${sources.igdb}">IGDB</a>`:''}
+      ${sources.tmdb ? html`<a class="mt-event-source" href="${sources.tmdb}">TMDB</a>`:''}
+      ${sources.imdb ? html`<a class="mt-event-source" href="${sources.imdb}">IMDB</a>`:''}
+    `
+  }
+  if(type == 'primary') {
+    return html`
+      ${sources.igdb ? html`<a class="mt-event-source" href="${sources.igdb}">IGDB</a>`:''}
+      ${sources.tmdb ? html`<a class="mt-event-source" href="${sources.tmdb}">TMDB</a>`:''}
+    `
+  }
+  return html``;
 }

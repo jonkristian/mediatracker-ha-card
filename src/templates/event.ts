@@ -7,6 +7,7 @@ import updateLocale from "dayjs/plugin/updateLocale";
 dayjs.extend(updateLocale);
 dayjs.extend(relativeTime);
 import setupCustomlocalize from "../localize/localize";
+import { getSourceLinks } from "../utils";
 
 @customElement("mediatracker-event")
 export class MediaTrackerCardEvent extends LitElement {
@@ -43,7 +44,7 @@ export class MediaTrackerCardEvent extends LitElement {
 
           <div class="mt-event-details">
             ${this.rating && data.tmdb_rating ? html`Rating: ${data.tmdb_rating.toFixed(1)}`:''}
-            ${this.get_source_links(data.sources)}
+            ${getSourceLinks(this.source_links, data.sources)}
           </div>
 
           ${showDescription == true || this.description == 'all'
@@ -54,23 +55,6 @@ export class MediaTrackerCardEvent extends LitElement {
           }
       </div>
     `;
-  }
-
-  get_source_links(sources) {
-    if(this.source_links == 'all') {
-      return html`
-        ${sources.igdb ? html`<a class="mt-event-source" href="${sources.igdb}">IGDB</a>`:''}
-        ${sources.tmdb ? html`<a class="mt-event-source" href="${sources.tmdb}">TMDB</a>`:''}
-        ${sources.imdb ? html`<a class="mt-event-source" href="${sources.imdb}">IMDB</a>`:''}
-      `
-    }
-    if(this.source_links == 'primary') {
-      return html`
-        ${sources.igdb ? html`<a class="mt-event-source" href="${sources.igdb}">IGDB</a>`:''}
-        ${sources.tmdb ? html`<a class="mt-event-source" href="${sources.tmdb}">TMDB</a>`:''}
-      `
-    }
-    return html``;
   }
 
   static get styles(): CSSResultGroup {

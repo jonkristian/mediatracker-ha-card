@@ -92,7 +92,7 @@ export class MediaTrackerCard extends LitElement implements LovelaceCard {
     dayjs.locale(lang);
 
     this._fetchCalendarEvents();
-    const days = groupEventsByDay(this._events);
+    const groups = groupEventsByDay(this._events);
 
     return html`
     <ha-card>
@@ -102,14 +102,14 @@ export class MediaTrackerCard extends LitElement implements LovelaceCard {
         </div>
 
         <div class="mt-calendar${this._config.constrict_height?' constrict':''}">
-          ${days ? html`
-            ${days.map(
-              (events) => html`
+          ${groups ? html`
+            ${groups.map(
+              (group) => html`
                 <div class="mt-day">
                   <mediatracker-card-events
                     .hass=${this.hass}
-                    .date=${events[0].start}
-                    .events="${events}"
+                    .date=${group.date}
+                    .events="${group.events}"
                     .config="${this._config}"
                   ></mediatracker-card-events>
                 </div>

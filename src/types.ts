@@ -57,3 +57,9 @@ export interface MediaTrackerCalendarEvent {
   location: string;
   [key: string]: any;
 }
+
+export interface MediaTrackerCalendarEventSources {
+  igdb?: string;
+  tmdb?: string;
+  imdb?: string;
+};
